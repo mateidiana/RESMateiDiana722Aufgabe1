@@ -1,4 +1,6 @@
 package org.example;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.io.*;
 
@@ -30,10 +32,14 @@ public class Main {
 
         //b.
 
-        System.out.println("Enter a value for points:");
-        Scanner scanner = new Scanner(System.in);
-        Double input = Double.parseDouble(scanner.nextLine());
-        printNinjasWithPointsGreaterThan(input,logs);
+//        System.out.println("Enter a value for points:");
+//        Scanner scanner = new Scanner(System.in);
+//        Double input = Double.parseDouble(scanner.nextLine());
+//        printNinjasWithPointsGreaterThan(input,logs);
+
+        //c.
+        System.out.println("\n\n\n");
+        sortByDatesFilteredByStage(logs);
     }
 
     public static void printNinjasWithPointsGreaterThan(double points, ArrayList<Log> logs){
@@ -42,5 +48,34 @@ public class Main {
                 System.out.println(log.getName());
         }
     }
+
+    public static void sortByDatesFilteredByStage(ArrayList<Log> logs){
+        Map<LocalDate,Log> sortedLogs=new LinkedHashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for (Log log:logs){
+            if (log.getStufe().equals("Jonin")){
+                LocalDate date = LocalDate.parse(log.getDatum(), formatter);
+                sortedLogs.put(date,log);
+            }
+
+        }
+
+        //Descending
+
+        List<Map.Entry<LocalDate, Log>> entryList = new ArrayList<>(sortedLogs.entrySet());
+        entryList.sort(Map.Entry.<LocalDate, Log>comparingByKey().reversed());
+
+        // Clear the original map and reinsert entries in sorted order
+        sortedLogs.clear();
+        for (Map.Entry<LocalDate, Log> entry : entryList) {
+            sortedLogs.put(entry.getKey(), entry.getValue());
+        }
+
+        System.out.println("\nAfter sorting (descending by date):");
+        sortedLogs.forEach((date, event) -> System.out.println(date + " -> " + event));
+
+    }
+
+
 
 }
