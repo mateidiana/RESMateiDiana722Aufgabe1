@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
 
         String jsonLogFilePath = "ninja_events.json";
-        ArrayList<Log> logs;
+        ArrayList<Log> logs=new ArrayList<>();
 
         System.out.println("------------------------------------------");
         System.out.println("JSON");
@@ -27,7 +27,20 @@ public class Main {
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        //b.
+
+        System.out.println("Enter a value for points:");
+        Scanner scanner = new Scanner(System.in);
+        Double input = Double.parseDouble(scanner.nextLine());
+        printNinjasWithPointsGreaterThan(input,logs);
     }
 
+    public static void printNinjasWithPointsGreaterThan(double points, ArrayList<Log> logs){
+        for (Log log:logs){
+            if(log.getPunkte()>=points)
+                System.out.println(log.getName());
+        }
+    }
 
 }
