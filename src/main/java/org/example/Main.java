@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.io.*;
+import java.util.stream.Collectors;
 
 import org.example.logs.Log;
 import org.example.log_parser_factory.JsonLogParser;
@@ -39,7 +40,10 @@ public class Main {
 
         //c.
         System.out.println("\n\n\n");
-        sortByDatesFilteredByStage(logs);
+//        sortByDatesFilteredByStage(logs);
+
+        //d.
+        writeStagesToFile(logs,"gesamtzahl.txt");
     }
 
     public static void printNinjasWithPointsGreaterThan(double points, ArrayList<Log> logs){
@@ -76,6 +80,38 @@ public class Main {
 
     }
 
+    public static void writeStagesToFile(ArrayList<Log> logs, String filePath){
+        Map<String, Integer> stageCount = new HashMap<>();
+        for (Log log : logs) {
+            stageCount.put(log.getStufe(), stageCount.getOrDefault(log.getStufe(), 0) + 1);
+        }
 
+        Map<String, Integer> sortedMap = stageCount.entrySet().stream()
+                .sorted((e1, e2) -> {
+                    int countCompare = Integer.compare(e2.getValue(), e1.getValue());  // Descending by count
+                    if (countCompare != 0) {
+                        return countCompare;
+                    } else {
+                        return e1.getKey().compareTo(e2.getKey());  // Alphabetically if counts are the same
+                    }
+                })
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new // Preserve the sorted order
+                ));
+
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+                writer.write(entry.getKey()+"%"+entry.getValue());
+                writer.newLine();
+            }
+            System.out.println("Scores written to file successfully.");
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
+    }
 
 }
