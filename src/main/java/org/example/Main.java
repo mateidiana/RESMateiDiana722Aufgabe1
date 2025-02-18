@@ -43,7 +43,7 @@ public class Main {
 //        sortByDatesFilteredByStage(logs);
 
         //d.
-        writeStagesToFile(logs,"gesamtzahl.txt");
+        //writeStagesToFile(logs,"gesamtzahl.txt");
     }
 
     public static void printNinjasWithPointsGreaterThan(double points, ArrayList<Log> logs){
